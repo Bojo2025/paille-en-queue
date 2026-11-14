@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f08a5d">
+<title>PAILLE-EN-QUEUE</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<!-- in-game buttons -->
+<button id="btnPause" class="hudbtn hidden" aria-label="Pause">II</button>
+<button id="btnMute" class="hudbtn hidden" aria-label="Sound">&#9835;</button>
+<div class="perkbar">
+  <button id="btnRoll" class="perkbtn hidden" aria-label="Barrel roll">&#8635;<small>ROLL</small></button>
+  <button id="btnBurst" class="perkbtn hidden" aria-label="Speed burst">&raquo;<small>BURST</small></button>
+  <button id="btnDive" class="perkbtn hidden" aria-label="Dive">&darr;<small>DIVE</small></button>
+</div>
+
+<!-- title -->
+<div id="title" class="screen">
+  <div class="logo">
+    <h1>PAILLE-EN-QUEUE</h1>
+    <div class="sub">Lanvol paillonque &middot; a tropicbird flight round Mauritius</div>
+  </div>
+  <div class="menu">
+    <button id="btnPlay" class="big">VOLE! &nbsp;PLAY</button>
+    <div class="row">
+      <button id="btnLevels" class="small">LEVELS</button>
+      <button id="btnHow" class="small">HOW TO PLAY</button>
+    </div>
+    <div class="row">
+      <button id="btnSound" class="small">SOUND: ON</button>
+      <button id="btnVibe" class="small">VIBRATION: ON</button>
+    </div>
+    <div id="bestLine" class="best"></div>
+  </div>
+</div>
+
+<!-- level select -->
+<div id="levels" class="screen hidden">
+  <h2>CHOOSE YOUR FLIGHT</h2>
+  <div id="levelGrid" class="grid"></div>
+  <button id="btnLevelsBack" class="small">BACK</button>
+</div>
+
+<!-- how to play -->
+<div id="how" class="screen hidden">
+  <h2>HOW TO FLY</h2>
+  <div class="howgrid">
+    <div><b>TAP / HOLD</b> anywhere<br>(Space / &uarr; / W)<br>= flap up. Let go to drop.</div>
+    <div><b>FISH</b> = energy. Energy drains while you fly. At zero you can't flap, and hitting the sea ends the flight.</div>
+    <div><b>TAIL STREAMERS</b> = health. Each hit costs one. Every 10-catch combo grows one back.</div>
+    <div><b>COMBO</b> x1&ndash;x8: chain fish, near misses, bounces and slipstreams before the timer ring runs out. A hit resets it.</div>
+    <div><b>NEAR MISS</b>: brush past danger without touching it for bonus points and slow motion.</div>
+    <div><b>MOVES</b> you unlock: swipe &darr; / S = dive, swipe &rarr; / D = burst, swipe &uarr; / E = barrel roll. On phones there are buttons too.</div>
+  </div>
+  <p class="keys">P / Esc = pause</p>
+  <button id="btnHowBack" class="small">BACK</button>
+</div>
+
+<!-- level intro card -->
+<div id="card" class="screen hidden">
+  <div class="panel">
+    <div id="cardKicker" class="kicker"></div>
+    <h2 id="cardTitle"></h2>
+    <p id="cardText"></p>
+    <ul id="cardTips" class="tips"></ul>
+    <div class="row">
+      <button id="btnCard" class="big">ANOU VOLE!</button>
+    </div>
+    <button id="btnCardBack" class="small">BACK</button>
+  </div>
+</div>
+
+<!-- pause -->
+<div id="pause" class="screen hidden">
+  <h2>PAUSE</h2>
+  <button id="btnResume" class="big">RESUME</button>
+  <div class="row"><button id="btnQuit" class="small">QUIT TO TITLE</button><button id="btnPauseVibe" class="small">VIBRATION: ON</button></div>
+</div>
+
+<!-- game over -->
+<div id="over" class="screen hidden">
+  <div class="panel">
+    <div class="kicker">FLIGHT OVER</div>
+    <h2>Aie!</h2>
+    <p id="overReason"></p>
+    <div id="overStats" class="stats"></div>
+    <div class="row"><button id="btnRetry" class="big">TRY AGAIN</button></div>
+    <button id="btnOverLevels" class="small">LEVELS</button>
+  </div>
+</div>
+
+<!-- level complete -->
+<div id="done" class="screen hidden">
+  <div class="panel">
+    <div id="doneKicker" class="kicker"></div>
+    <h2>Bravo! <span id="doneTitle"></span></h2>
+    <div id="doneStars" class="stars"></div>
+    <div id="doneStats" class="stats"></div>
+    <div id="donePerk" class="perk"></div>
+    <div class="row">
+      <button id="btnNext" class="big">NEXT LEVEL</button>
+      <button id="btnDoneRetry" class="small">RETRY</button>
+      <button id="btnDoneLevels" class="small">LEVELS</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/assets.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/art.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
