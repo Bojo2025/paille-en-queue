@@ -232,5 +232,5 @@
     return g.out;
   };
 
-  window.PQLevels = { LEVELS: LEVELS, PERKS: PERKS, GEN: GEN, SEA: SEA, rng: rng };
+  window.PQLevels = { LEVELS: LEVELS, PERKS: PERKS, GEN: GEN, SEA: SEA, rng: rng, mk: G, B: B, pick: pick };
 })();

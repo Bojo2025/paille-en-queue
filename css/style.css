@@ -64,3 +64,27 @@ body.portrait .howgrid { grid-template-columns: 1fr; }
 .perkbtn { width: 62px; height: 62px; border-radius: 50%; background: rgba(0, 40, 70, 0.55); border: 2px solid rgba(255, 255, 255, 0.75); font-size: 24px; line-height: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .perkbtn small { font-size: 9px; margin-top: 2px; }
+
+/* ---- credits (small & subtle) ---- */
+.credit { display: flex; flex-direction: column; align-items: center; gap: 3px; opacity: 0.82; margin-bottom: 0.4vmin; text-shadow: 0 1px 3px rgba(0,0,0,0.85); pointer-events: none; }
+.credit .dev { font-size: clamp(10px, 1.55vmin, 13px); font-weight: 600; letter-spacing: 0.04em; }
+.credit .studio { display: flex; align-items: center; gap: 6px; font-size: clamp(10px, 1.45vmin, 12px); font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+  background: linear-gradient(90deg, #c59bff, #7ee8ff); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
+.credit .bslogo { height: clamp(26px, 4.6vmin, 44px); width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.7)); }
+.vcredit { margin-top: 1.4vmin; opacity: 0.9; }
+#victory { background-size: cover; background-position: center; justify-content: flex-end; }
+.vpanel { max-width: min(92vw, 640px); background: rgba(3, 30, 48, 0.7); }
+/* ---- level select map ---- */
+#levels { justify-content: flex-start; }
+.map { width: min(96vw, 1000px); flex: 0 0 auto; }
+.map svg { width: 100%; height: auto; max-height: 34vh; display: block; }
+.map .dot { cursor: pointer; }
+.map .dot text { font-size: 15px; font-weight: 900; fill: #fff; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.map .lbl { font-size: 13px; font-weight: 800; fill: rgba(255,255,255,0.8); letter-spacing: 0.06em; }
+.grid { grid-template-columns: repeat(6, minmax(0, 1fr)); flex: 0 0 auto; }
+body.portrait .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lvl .num { font-size: clamp(14px, 3vmin, 26px); }
+.lvl .nm { font-size: clamp(9px, 1.8vmin, 14px); }
+.lvl .bs { font-size: clamp(8px, 1.5vmin, 11px); }
+.lvl .num { left: auto; right: 1vmin; top: 0.4vmin; opacity: 0.9; }
+.lvl .nm { padding-right: 2.6em; }

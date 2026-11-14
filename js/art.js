@@ -56,7 +56,7 @@
       for (var k2 = 0; k2 < pts.length; k2 += 2) c.lineTo(pts[k2], pts[k2 + 1]);
       c.lineCap = 'round'; c.lineJoin = 'round';
       c.strokeStyle = 'rgba(30,50,70,0.28)'; c.lineWidth = 4.4; c.stroke();
-      c.strokeStyle = o.wet ? '#dfe9f0' : '#ffffff'; c.lineWidth = 2.6; c.stroke();
+      c.strokeStyle = o.tailCol || (o.wet ? '#dfe9f0' : '#ffffff'); c.lineWidth = 2.6; c.stroke();
     }
     // far wing
     c.save(); c.translate(-2, -5); wing(c, flapS * 0.85 + 0.1, true); c.restore();

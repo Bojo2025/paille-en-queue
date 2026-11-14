@@ -87,6 +87,12 @@
     lagoon:{ prog: [[62, 66, 69], [67, 71, 74], [69, 73, 76], [62, 66, 69]], bass: [38, 43, 45, 38], scale: [0, 2, 4, 7, 9], root: 74, bar: 1.8 },
     ghost: { prog: [[57, 60, 64], [53, 57, 60], [55, 59, 62], [52, 56, 59]], bass: [33, 29, 31, 28], scale: [0, 3, 5, 7, 10], root: 69, bar: 1.85 },
     night: { prog: [[57, 60, 64], [62, 65, 69], [60, 64, 67], [55, 59, 62]], bass: [33, 38, 36, 31], scale: [0, 3, 5, 7, 10], root: 69, bar: 2.1 },
+    south: { prog: [[57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]], bass: [33, 29, 36, 31], scale: [0, 2, 3, 7, 9], root: 69, bar: 1.75 },
+    west:  { prog: [[62, 66, 69], [60, 64, 67], [67, 71, 74], [62, 66, 69]], bass: [38, 36, 43, 38], scale: [0, 2, 4, 7, 10], root: 74, bar: 1.85 },
+    islet: { prog: [[64, 68, 71], [69, 73, 76], [71, 75, 78], [64, 68, 71]], bass: [40, 45, 47, 40], scale: [0, 2, 4, 7, 9], root: 76, bar: 1.7 },
+    rodrigues: { prog: [[67, 71, 74], [60, 64, 67], [62, 66, 69], [67, 71, 74]], bass: [43, 36, 38, 43], scale: [0, 2, 4, 5, 7, 9], root: 79, bar: 1.65 },
+    outer: { prog: [[65, 69, 72], [62, 65, 69], [58, 62, 65], [60, 64, 67]], bass: [41, 38, 34, 36], scale: [0, 2, 4, 7, 9], root: 77, bar: 2.2 },
+    storm: { prog: [[52, 55, 59], [48, 52, 55], [50, 53, 57], [47, 50, 54]], bass: [28, 24, 26, 23], scale: [0, 3, 5, 7, 10], root: 64, bar: 1.55 },
     title: { prog: [[60, 64, 67], [57, 60, 64], [65, 69, 72], [67, 71, 74]], bass: [36, 33, 41, 43], scale: [0, 2, 4, 7, 9], root: 72, bar: 2.0 }
   };
   // a fixed melodic phrase bank (scale-degree indices, -1 = rest) so the tune is catchy, not random
@@ -127,14 +133,16 @@
     // plucked chords on the off-beats
     if ((I >= 2 || style === 'title') && (s === 3 || s === 9 || (I >= 3 && s === 6))) pluck(ch, t);
     // melody
-    if (I >= 3 || style === 'title' || style === 'night') {
-      var ph = PHR[(bar + (style === 'night' ? 2 : 0)) % 4], deg = ph[s];
-      if (deg >= 0 && (style !== 'night' || s % 2 === 0)) {
+    if (I >= 3 || style === 'title' || style === 'night' || style === 'outer') {
+      var sp = style === 'night' || style === 'outer', ph = PHR[(bar + (sp ? 2 : 0)) % 4], deg = ph[s];
+      if (deg >= 0 && (!sp || s % 2 === 0)) {
         var sc = S.scale, m = S.root + sc[deg % sc.length] + 12 * Math.floor(deg / sc.length);
-        if (style === 'night') bell(m, t); else lead(m, t, sd * 1.2, style === 'ghost');
+        if (style === 'night' || style === 'outer') bell(m, t); else if (style === 'rodrigues') { osc('triangle', NOTE(m), t, sd * 1.1, 0.13, musicBus, { send: 0.25 }); osc('square', NOTE(m + 7), t, sd * 0.8, 0.03, musicBus, { lp: 2200 }); } else lead(m, t, sd * 1.2, style === 'ghost' || style === 'storm');
         A.stats.musicNotes++;
       }
     }
+    if (style === 'storm' && s === 0) { osc('sawtooth', NOTE(S.bass[ci] + 12), t, S.bar * 0.95, 0.05, musicBus, { lp: 700, a: 0.2, send: 0.3 }); noise(t, S.bar * 0.9, 0.05, 'lowpass', 500, musicBus, { a: 0.4 }); }
+    if (style === 'south' && s === 0 && bar % 2 === 1) osc('sine', NOTE(S.bass[ci] + 24), t, S.bar * 0.7, 0.05, musicBus, { a: 0.15, send: 0.4 });
     if (style === 'ghost' && s === 0 && bar % 2 === 0) osc('sawtooth', NOTE(S.bass[ci] + 24), t, S.bar * 0.9, 0.035, musicBus, { lp: 900, a: 0.3, send: 0.4 });
   }
   function pump() {
@@ -162,7 +170,7 @@
     if (amb) { try { amb.g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.3); amb.s.stop(ctx.currentTime + 1.5); } catch (e) {} amb = null; }
     ambKind = kind; if (!kind) return;
     var s = ctx.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
-    var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = kind === 'night' ? 500 : 900;
+    var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = kind === 'night' ? 500 : kind === 'storm' ? 1400 : kind === 'forest' ? 650 : kind === 'falls' ? 1800 : 900;
     var g = ctx.createGain(); g.gain.value = 0.0001; g.gain.setTargetAtTime(0.5, ctx.currentTime, 0.8);
     var lfo = ctx.createOscillator(), lg = ctx.createGain(); lfo.frequency.value = 0.12; lg.gain.value = 0.35; lfo.connect(lg); lg.connect(g.gain); lfo.start();
     s.connect(f); f.connect(g); g.connect(ambBus); s.start(); A.stats.nodesStarted += 2;
@@ -199,6 +207,20 @@
     click: function (t) { osc('triangle', 1200, t, 0.03, 0.2); },
     bell: function (t) { osc('sine', 1046, t, 1.0, 0.25, null, { send: 0.5 }); osc('sine', 2887, t, 0.4, 0.07); },
     whiteout: function (t) { osc('sine', 4000, t, 0.5, 0.06, null, { to: 1200 }); },
+    rumble: function (t) { osc('sine', 55, t, 0.8, 0.9, null, { to: 38, a: 0.15 }); noise(t, 0.8, 0.5, 'lowpass', 220, null, { a: 0.2 }); },
+    jet: function (t) { noise(t, 0.9, 0.8, 'bandpass', 900, null, { fTo: 2800, q: 0.6, a: 0.03 }); osc('sine', 120, t, 0.5, 0.5, null, { to: 60 }); },
+    surf: function (t) { noise(t, 0.6, 0.45, 'bandpass', 700, null, { fTo: 1800, q: 0.7, a: 0.08 }); },
+    wave: function (t) { noise(t, 1.4, 0.7, 'lowpass', 900, null, { fTo: 200, a: 0.2 }); },
+    monkey: function (t) { for (var i = 0; i < 3; i++) osc('sawtooth', 700 + i * 90, t + i * 0.09, 0.07, 0.14, null, { to: 1100, lp: 2600 }); },
+    chick: function (t) { osc('sine', 2600, t, 0.07, 0.2, null, { to: 3400 }); osc('sine', 2900, t + 0.1, 0.08, 0.18, null, { to: 3600 }); },
+    scare: function (t) { osc('square', 500, t, 0.2, 0.15, null, { to: 220, lp: 1800 }); noise(t, 0.2, 0.3, 'bandpass', 1500); },
+    rock: function (t) { noise(t, 0.5, 0.7, 'lowpass', 600, null, { fTo: 120 }); osc('sine', 80, t, 0.3, 0.5, null, { to: 40 }); },
+    steal: function (t) { osc('sawtooth', 900, t, 0.25, 0.14, null, { to: 300, lp: 2200 }); },
+    feint: function (t) { osc('triangle', 660, t, 0.1, 0.25, null, { to: 1320 }); osc('triangle', 990, t + 0.08, 0.15, 0.2); },
+    lightning: function (t) { noise(t, 0.12, 1.0, 'highpass', 2500); noise(t + 0.05, 1.8, 0.9, 'lowpass', 400, null, { fTo: 50, a: 0.02 }); },
+    wind: function (t) { noise(t, 1.2, 0.35, 'bandpass', 500, null, { fTo: 1400, q: 2.5, a: 0.3 }); },
+    style: function (t) { [0, 7, 12].forEach(function (n, i) { osc('triangle', NOTE(79 + n), t + i * 0.06, 0.12, 0.2, null, { send: 0.4 }); }); },
+    rest: function (t) { osc('sine', 523, t, 0.4, 0.15, null, { send: 0.4 }); osc('sine', 784, t + 0.1, 0.4, 0.12, null, { send: 0.4 }); },
     star: function (t) { osc('triangle', 1568, t, 0.15, 0.25, null, { send: 0.4 }); osc('triangle', 2093, t + 0.06, 0.2, 0.2, null, { send: 0.4 }); }
   };
   function ravanneLowS(t) { osc('sine', 120, t, 0.22, 0.9, null, { to: 55, toT: 0.18 }); }
